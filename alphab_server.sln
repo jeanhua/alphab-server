@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "alphab_server", "alphab_server.csproj", "{B135F2B2-361D-4C6C-AF0A-D2B9EF5B6B34}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{434B21CB-060D-460F-9320-3D4AEEEF0A59}"
+	ProjectSection(SolutionItems) = preProject
+		Encrypt.cs = Encrypt.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B135F2B2-361D-4C6C-AF0A-D2B9EF5B6B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B135F2B2-361D-4C6C-AF0A-D2B9EF5B6B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B135F2B2-361D-4C6C-AF0A-D2B9EF5B6B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B135F2B2-361D-4C6C-AF0A-D2B9EF5B6B34}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D61DAD1-834A-45B1-B2E3-D06801DAF16F}
+	EndGlobalSection
+EndGlobal
