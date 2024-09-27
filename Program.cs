@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Collections.Concurrent;
 using Fleck;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Program
 {
@@ -11,6 +12,10 @@ namespace Program
     {
         static void Main(String[] args)
         {
+            if(!Directory.Exists("./cache"))
+            {
+                Directory.CreateDirectory("./cache");
+            }
             int port = 0;
             while (true)
             {
@@ -115,14 +120,51 @@ namespace Program
             {
                 try
                 {
+                    //接收消息
                     string decrypt_message = AESEncrypt.DecryptBytes(System.Convert.FromBase64String(message), listeners_key[socket]);
+                    var jsonmsg = JsonSerializer.Deserialize<Dictionary<string , string>>(decrypt_message);
+                    if (jsonmsg["type"] == "message")
+                    {
+                        message_queue.Add(new MessageQueue(socket, decrypt_message));
+                    }
+                    else if (jsonmsg["type"] == "image")
+                    {
+                        string data = jsonmsg["data"];
+                        File.WriteAllText("./cache/" + jsonmsg["id"], data);
+                        jsonmsg["data"] = "already in server, call {\"type\":\"data\", \"id\":String} to get";
+                        message_queue.Add(new MessageQueue(socket, JsonSerializer.Serialize(jsonmsg)));
+                    }
+                    else if (jsonmsg["type"] == "disposable image")
+                    {
+                        string data = jsonmsg["data"];
+                        File.WriteAllText("./cache/" + jsonmsg["id"], data);
+                        jsonmsg["data"] = "already in server, call {\"type\":\"data\", \"id\":String} to get";
+                        message_queue.Add(new MessageQueue(socket, JsonSerializer.Serialize(jsonmsg)));
+                    }
+                    else if (jsonmsg["type"] == "audio")
+                    {
+                        string data = jsonmsg["data"];
+                        File.WriteAllText("./cache/" + jsonmsg["id"], data);
+                        jsonmsg["data"] = "already in server, call {\"type\":\"data\", \"id\":String} to get";
+                        message_queue.Add(new MessageQueue(socket, JsonSerializer.Serialize(jsonmsg)));
+                    }
+                    else if (jsonmsg["type"] == "data")
+                    {
+                        var data = new Dictionary<string, string>();
+                        data["type"] = "data";
+                        data["id"] = jsonmsg["id"];
+                        data["data"] = File.ReadAllText("./cache/" + data["id"]);
+                        byte[] bytes1 = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(data));
+                        socket.Send(Encoding.UTF8.GetBytes(AESEncrypt.EncryptBytes(bytes1, listeners_key[socket])));
+                        return;
+                    }
+                    // 回调
                     var callback = new Dictionary<string, string>();
                     callback["type"] = "callback";
                     callback["id"] = JsonDocument.Parse(decrypt_message).RootElement.GetProperty("id").GetString();
                     callback["status"] = "success";
                     byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(callback));
                     socket.Send(Encoding.UTF8.GetBytes(AESEncrypt.EncryptBytes(bytes, listeners_key[socket])));
-                    message_queue.Add(new MessageQueue(socket, decrypt_message));
                 }
                 catch (Exception ex)
                 {
